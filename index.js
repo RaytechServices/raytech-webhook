@@ -1,7 +1,7 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
-const app = express();
 
+const app = express();
 app.use(express.json());
 
 app.post('/webhook', async (req, res) => {
@@ -24,7 +24,7 @@ app.post('/webhook', async (req, res) => {
 
     await transporter.sendMail({
       from: `"Raytech Agent" <${process.env.EMAIL_USER}>`,
-      to: "services@raytech.co",
+      to: "servicesraytech@gmail.com",
       subject: `New Client Lead: ${name} - ${business}`,
       html: `
         <h2>New Client Inquiry</h2>
@@ -33,7 +33,8 @@ app.post('/webhook', async (req, res) => {
         <p><strong>Address:</strong> ${address}</p>
         <p><strong>Business:</strong> ${business}</p>
         <hr>
-        <p><strong>Call Summary:</strong> ${summary}</p>
+        <p><strong>Call Summary:</strong></p>
+        <p>${summary}</p>
         <br>
         <small>Sent by LiveKit Receptionist Agent</small>
       `,
@@ -43,12 +44,12 @@ app.post('/webhook', async (req, res) => {
     res.json({ status: "success" });
 
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ status: "error" });
+    console.error("Email Error:", error.message);
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`Webhook running on port ${port}`);
+  console.log(`🚀 Webhook running on port ${port}`);
 });
